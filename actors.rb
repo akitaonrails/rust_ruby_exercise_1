@@ -4,7 +4,7 @@ require './imdb.rb'
 
 module RustWorld
   extend FFI::Library
-  ffi_lib 'target/release/libimdb.so'
+  ffi_lib 'target/release/libimdb.' + (RUBY_PLATFORM.include?('darwin') ? 'dylib' : 'so')
   attach_function :ffi_find_actors, [:string, :int, :string], :string
 end
 
