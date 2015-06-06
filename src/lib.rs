@@ -2,8 +2,8 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::File;
 
-extern crate regex;
-use regex::Regex;
+extern crate pcre;
+use pcre::Pcre;
 
 extern crate libc;
 use libc::c_char;
@@ -31,7 +31,8 @@ pub fn find_actors(filename: String, skip_lines: usize, target_movie: String) ->
 
     let mut actor = String::new();
     let mut actors : Vec<String> = Vec::new();
-    let regex = Regex::new(r"^(.*?)\t+(.*?)$").unwrap();
+    let regex = Pcre::compile("^(.*?)\t+(.*?)$").unwrap();
+
     loop {
         let line = match reader.next() {
             Some(line) => match line {
@@ -41,10 +42,10 @@ pub fn find_actors(filename: String, skip_lines: usize, target_movie: String) ->
             None => break,
         };
 
-        match regex.captures(&line) {
+        match regex.exec(&line) {
             Some(captures) => {
-                let actor_buffer = captures.at(1).unwrap();
-                let movie        = captures.at(2).unwrap();
+                let actor_buffer = captures.group(1);
+                let movie        = captures.group(2);
 
                 if actor.is_empty() && !actor_buffer.is_empty() {
                     actor = actor_buffer.to_string();

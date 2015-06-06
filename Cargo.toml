@@ -9,5 +9,5 @@ path = "src/lib.rs"
 crate-type = ["rlib", "dylib"]
 
 [dependencies]
-regex = "0.1.8"
 libc = "0.1.8"
+pcre = "0.1.0" 
